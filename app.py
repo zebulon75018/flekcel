@@ -1,15 +1,17 @@
 import sqlite3
 import json
 import glob
-from flask import Flask
+from flask import Flask, request
 from flask import render_template
 import csv
 
 server = Flask(__name__)
 
 
-@server.route('/save/<file>')
+@server.route('/save/<file>', methods=["POST"])
 def save(file):
+    data = request.form['data']
+    print(data)
     return file
 
 @server.route('/edit/<file>')
