@@ -7,6 +7,11 @@ import csv
 
 server = Flask(__name__)
 
+
+@server.route('/save/<file>')
+def save(file):
+    return file
+
 @server.route('/edit/<file>')
 def edit(file):
     result = []
