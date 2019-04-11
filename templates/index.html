@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+
+{% block title %} Flekel {% endblock %}
+
+{% block body %}
+
+
+<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto">
+  <ul>
+{% for dir in dirs %}
+<li><a href="/edit/{{dir}}">{{dir}}</a></li>
+{% endfor %}
+</ul>
+</div>
+
+{% endblock %}
