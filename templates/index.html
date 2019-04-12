@@ -5,12 +5,34 @@
 {% block body %}
 
 
-<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto">
-  <ul>
+<center>
+<div id="container" >
+  <table>
+      <tr>
+          <th>Description</th>
+          <th>File</th>
+          <th>Action</th>
+        </tr>
 {% for dir in dirs %}
-<li><a href="/edit/{{dir}}">{{dir}}</a></li>
-{% endfor %}
-</ul>
-</div>
+<tr>
 
+      <td width="70%">
+          {{datas[dir]["subject"]}}
+        </td>
+        <td>
+    <b class="des title"><a href="/edit/{{dir}}">{{dir}}</a>
+      
+    </td>
+    <td>
+        <a  href="/edit/{{dir}}" title="edit csv" class="btn btn-default btn-sm"> <i class="glyphicon glyphicon-pencil text-primary"></i> </a>
+        </td>
+    <td>
+        <a href="/editdescription/{{dir}}" title="edit description/summary" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-cog" style="float:right;"></i></a>
+    </td>
+  
+</tr>
+{% endfor %}
+</table>
+</div>
+</center>
 {% endblock %}

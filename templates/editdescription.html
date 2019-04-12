@@ -1,0 +1,187 @@
+{% extends "layout.html" %}
+{% block body %}
+<style>
+.contact-h {
+    font-size: 24px;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 40px;
+    color: #00BCD4;
+}
+.contact .form-group {
+    margin-bottom: 40px;
+}
+.contact .form-control {
+    border-radius: 0;
+    border: none;
+    border-bottom: 4px solid #00BCD4;
+    box-shadow: none;
+}
+.contact .btn-primary {
+    background-color: #00BCD4;
+    border-color: rgb(3, 10, 109);
+    border-radius: 0;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+.contact .btn {
+    padding: 12px 15px;
+}
+.group {
+    position: relative;
+    margin-bottom: 45px;
+}
+input:focus {
+    outline: none;
+}
+label {
+    color: #999;
+    font-size: 18px;
+    font-weight: normal;
+    position: absolute;
+    pointer-events: none;
+    left: 5px;
+    top: 0;
+    transition: 0.2s ease all;
+    -moz-transition: 0.2s ease all;
+    -webkit-transition: 0.2s ease all;
+}
+input:focus ~ label,
+input:valid ~ label {
+    top: -20px;
+    font-size: 14px;
+    color: #96c93d;
+}
+.bar {
+    position: relative;
+    display: block;
+    width: 100%;
+}
+.bar:before,
+.bar:after {
+    content: '';
+    height: 4px;
+    width: 0;
+    bottom: 0px;
+    position: absolute;
+    background: #96c93d;
+    transition: 0.2s ease all;
+    -moz-transition: 0.2s ease all;
+    -webkit-transition: 0.2s ease all;
+}
+.bar:before {
+    left: 50%;
+}
+.bar:after {
+    right: 50%;
+}
+input:focus ~ .bar:before,
+input:focus ~ .bar:after {
+    width: 50%;
+}
+.highlight {
+    position: absolute;
+    width: 100px;
+    top: 25%;
+    left: 0;
+    pointer-events: none;
+    opacity: 0.5;
+}
+/* active state */
+
+input:focus ~ .highlight {
+    -webkit-animation: inputHighlighter 0.3s ease;
+    -moz-animation: inputHighlighter 0.3s ease;
+    animation: inputHighlighter 0.3s ease;
+}
+/* ANIMATIONS ================ */
+
+@-webkit-keyframes inputHighlighter {
+    from {
+        background: #5264AE;
+    }
+    to {
+        width: 0;
+        background: transparent;
+    }
+}
+@-moz-keyframes inputHighlighter {
+    from {
+        background: #5264AE;
+    }
+    to {
+        width: 0;
+        background: transparent;
+    }
+}
+@keyframes inputHighlighter {
+    from {
+        background: #5264AE;
+    }
+    to {
+        width: 0;
+        background: transparent;
+    }
+}
+.text-group textarea {
+    display: block;
+    background: white;
+    padding: 0.125rem 0.125rem 0.0625rem;
+    border-width: 0;
+    border-color: transparent;
+    line-height: 1.9;
+    width: 100%;
+    -webkit-transition: all 0.28s ease;
+    transition: all 0.28s ease;
+    box-shadow: none;
+}
+.text-group textarea:focus ~ .input-label,
+.text-group textarea:valid ~ .input-label,
+.text-group textarea.form-file ~ .input-label,
+.text-group textarea.has-value ~ .input-label {
+    font-size: 14px;
+    ;
+    color: gray;
+    top: -1rem;
+    left: 0;
+}
+.text-group textarea:focus ~ .input-label {
+    color: #96c93d;
+}
+.text-group textarea:focus ~ .bar::before {
+    width: 100%;
+    left: 0;
+}
+.text-group {
+    position: relative;
+    margin-top: 2.25rem;
+    margin-bottom: 4.25rem;
+}
+
+</style>
+<div class="container">
+    <div class="contact">
+        <div class="col-md-6 col-md-offset-3">
+            <div class="form-area">
+                <div class="text-center contact-h"> Description {{file}}</div>
+                <form id="formsave" action="/savedescription/{{file}}"> 
+                    <div class="form-group group">
+                        <input type="text" class="form-control" id="subject" name="subject" value="{{data["subject"]}}" required>
+                        <span class="highlight"></span>
+                        <span class="bar"></span>
+                        <label>Summary</label>
+                    </div>
+                    <div class="form-group group">
+                        <div class="text-group">
+                            <textarea name="sumary" required="required" class="form-control" rows="6">{{data["sumary"]}}</textarea>
+                            <label for="textarea" class="input-label">Help</label><i class="bar"></i>
+                        </div>
+                    </div>
+                    <input type="submit" name="submit" value="Save" class="btn btn-primary col-md-12"></input>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
