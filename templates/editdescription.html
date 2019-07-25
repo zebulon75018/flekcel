@@ -1,6 +1,20 @@
 {% extends "layout.html" %}
 {% block body %}
+<link href="https://cdn.jsdelivr.net/npm/suneditor@latest/dist/css/suneditor.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/suneditor@latest/dist/suneditor.min.js"></script>
+<!-- languages (Basic Language: English/en) -->
+<script src="https://cdn.jsdelivr.net/npm/suneditor@latest/src/lang/ko.js"></script>
+
 <style>
+    
+    /*
+ * Made by Erik Terwan
+ * 7th of December 2015
+ * All rights reserved
+ */
+
+
+    
 .contact-h {
     font-size: 24px;
     text-transform: uppercase;
@@ -161,7 +175,7 @@ input:focus ~ .highlight {
 </style>
 <div class="container">
     <div class="contact">
-        <div class="col-md-6 col-md-offset-3">
+        <div class="col-md-10">
             <div class="form-area">
                 <div class="text-center contact-h"> Description {{file}}</div>
                 <form id="formsave" action="/savedescription/{{file}}"> 
@@ -173,15 +187,51 @@ input:focus ~ .highlight {
                     </div>
                     <div class="form-group group">
                         <div class="text-group">
-                            <textarea name="sumary" required="required" class="form-control" rows="6">{{data["sumary"]}}</textarea>
+                            <textarea name="sumaryfAKE"  class="form-control" rows="6" id="ETEditor1">{{data["sumary"]}}</textarea>
                             <label for="textarea" class="input-label">Help</label><i class="bar"></i>
                         </div>
                     </div>
                     <input type="submit" name="submit" value="Save" class="btn btn-primary col-md-12"></input>
+                     <input type="hidden" name="sumary" id="sumary"></input>
                 </form>
             </div>
         </div>
     </div>
 </div>
 
+<script >
+
+
+$( "#formsave" ).submit(function( event ) {
+  $("#sumary").val(edit.getContents());
+});
+
+var edit = SUNEDITOR.create('ETEditor1', {
+    showPathLabel : false,
+    charCounter : true,
+    maxCharCount : 720,
+    width : 'auto',
+    maxWidth : '700px',
+    height : 'auto',
+    minHeight : '100px',
+    maxHeight: '250px',
+    buttonList : [
+        ['undo', 'redo', 'font', 'fontSize', 'formatBlock'],
+        ['bold', 'underline', 'italic', 'strike', 'subscript', 'superscript', 'removeFormat'],
+        '/' // Line break
+        ['fontColor', 'hiliteColor', 'outdent', 'indent', 'align', 'horizontalRule', 'list', 'table'],
+        ['link', 'image', 'video', 'fullScreen', 'showBlocks', 'codeView', 'preview', 'print', 'save']
+    ],
+    callBackSave : function (contents) {
+        $.ajax({
+            url : '/updatesummary/{{file}}',
+            type: "POST",
+            data: contents,
+            //success: success, 
+         });
+   
+    }
+});
+
+</script>
 {% endblock %}
