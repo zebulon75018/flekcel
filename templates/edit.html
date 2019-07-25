@@ -1,8 +1,6 @@
-<!DOCTYPE html>
-<html lang="en" >
+{% extends "layout.html" %}
+{% block body %}
 
-<head>
-  <meta charset="UTF-8">
   <title>Flekel Edit {{file}}</title>
   
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
@@ -13,7 +11,7 @@
 
   <h1>{{file}}</b></h1>
 
-  {{description["sumary"]}}
+  {{description["sumary"]|safe}}
    
 <div id="grid" class="handsontable"></div>
 
@@ -56,6 +54,4 @@ hot = new Handsontable(container, {
 
 });
     </script>
-</body>
-
-</html>
+{% endblock %}
