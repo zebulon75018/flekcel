@@ -16,6 +16,6 @@ python csvtodatatablehtml.py [file csv]  > file_html_datatable.html
 
 This will make a html page for display csv in datatable https://datatables.net/ 
 
-[![datatable](https://datatables.net/forums/uploads/editor/5x/hwa0uj8t4gpn.png)]
+![datatable](https://lh3.googleusercontent.com/-1-agQSA8nTU/XpsXlytzOHI/AAAAAAAALXw/DcC7ssBN6PMAJeykFauhU22A-rLamfO9wCK8BGAsYHg/s0/2020-04-18.png)
 
 
