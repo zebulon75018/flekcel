@@ -9,5 +9,5 @@ df = pd.read_csv(sys.argv[1],delimiter=";",nrows=1)
 cols = list(df)
 
 
-print(template.render(cols=cols))
+print(template.render(cols=cols,filecsv=sys.argv[1]))
 
