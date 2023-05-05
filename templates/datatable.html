@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>CodePen - DataTables load from CSV</title>
+  <link rel='stylesheet' href='https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css'>
+
+
+  <link rel='stylesheet' href='https://cdn.datatables.net/fixedcolumns/4.2.1/css/fixedColumns.dataTables.min.css'>
+  <link rel='stylesheet' href='https://cdn.datatables.net/buttons/2.3.2/css/buttons.dataTables.min.css'>
+  <link rel='stylesheet' href='https://cdn.datatables.net/rowgroup/1.3.0/css/rowGroup.dataTables.min.css'>
+<style>
+   div.ColVis {
+        float: left;
+    }
+
+*{padding: 0; margin: 0; box-sizing: border-box;}
+header {
+	text-align: center;
+	width: 100%;
+	height: auto;
+	background-size: cover;
+	background-attachment: fixed;
+	position: relative;
+	overflow: hidden;
+	border-radius: 0 0 85% 85% / 30%;
+}
+header .overlay{
+	width: 100%;
+	height: 100%;
+	padding: 50px;
+	color: #FFF;
+	text-shadow: 1px 1px 1px #333;
+  background-image: linear-gradient( 135deg, #9f05ff69 10%, #fd5e086b 100%);
+	
+}
+
+h1 {
+	font-family: 'Dancing Script', cursive;
+	font-size: 80px;
+	margin-bottom: 30px;
+}
+
+h3, p {
+	font-family: 'Open Sans', sans-serif;
+	margin-bottom: 30px;
+}
+
+button {
+	border: none;
+	outline: none;
+	padding: 10px 20px;
+	border-radius: 50px;
+	color: #333;
+	background: #fff;
+	margin-bottom: 50px;
+	box-shadow: 0 3px 20px 0 #0000003b;
+}
+button:hover{
+	cursor: pointer;
+}
+</style>
+</head>
+<body>
+
+<header>
+	<div class="overlay">
+<h3> Eurofordocs data
+</h3>
+
+		</div>
+</header>
+
+
+<!-- partial:index.partial.html -->
+<table id="example" class="display compact">
+ <thead>
+            <tr>
+{% for c in cols %}
+               <th>{{c}}</th>
+{% endfor %}
+            </tr>
+ </thead>
+<tbody>
+</tbody>
+
+ <tfoot>
+    <tr style="text-align:center"> 
+{% for c in cols %}
+       <th></th>
+{% endfor %}
+    </tr>
+ </tfoot>
+
+</table>
+<!-- partial -->
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/0.8.9/jquery.csv.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.19/js/jquery.dataTables.min.js'></script>
+
+<script src='https://cdn.datatables.net/buttons/2.3.2/js/dataTables.buttons.min.js'></script>
+
+<script src='https://cdn.datatables.net/buttons/2.3.2/js/buttons.colVis.min.js'></script>
+<!-- -->
+
+
+<script>
+/* jshint browser: true, devel: true, jquery: true */
+(function() {
+  "use strict";
+
+
+ $('#example thead tr')
+        .clone(true)
+        .addClass('filters')
+        .appendTo('#example thead');
+
+  var csvColumns = [
+{% for c in cols %}
+     {title:"{{c}}", data:"{{c}}"},
+{% endfor %}
+];
+
+  //
+  // datatable...
+  //
+  var dataTable = $("table").DataTable({columns: csvColumns,
+       dom:            "Bfrtip",
+       buttons:        [ 'colvis' ],
+       paging: false,
+       fixedHeader: true,
+        initComplete: function () {
+            var api = this.api();
+ 
+            // For each column
+            api
+                .columns()
+                .eq(0)
+                .each(function (colIdx) {
+                    // Set the header cell to contain the input element
+                    var cell = $('.filters th').eq(
+                        $(api.column(colIdx).header()).index()
+                    );
+                    var title = $(cell).text();
+                    $(cell).html('<input type="text" placeholder="' + title + '" />');
+ 
+                    // On every keypress in this input
+                    $(
+                        'input',
+                        $('.filters th').eq($(api.column(colIdx).header()).index())
+                    )
+                        .off('keyup change')
+                        .on('change', function (e) {
+                            // Get the search value
+                            $(this).attr('title', $(this).val());
+                            var regexr = '({search})'; //$(this).parents('th').find('select').val();
+ 
+                            var cursorPosition = this.selectionStart;
+                            // Search the column for that value
+                            api
+                                .column(colIdx)
+                                .search(
+                                    this.value != ''
+                                        ? regexr.replace('{search}', '(((' + this.value + ')))')
+                                        : '',
+                                    this.value != '',
+                                    this.value == ''
+                                )
+                                .draw();
+                        })
+                        .on('keyup', function (e) {
+                            e.stopPropagation();
+ 
+                            $(this).trigger('change');
+                            $(this)
+                                .focus()[0]
+                                .setSelectionRange(cursorPosition, cursorPosition);
+                        });
+                });
+        },
+         
+         footerCallback: function (row, data, start, end, display) {
+               var api = this.api();
+             // Remove the formatting to get integer data for summation
+            var intVal = function ( i ) {
+                return typeof i === 'string' ?
+                    i.replace(/[\$,]/g, '')*1 :
+                    typeof i === 'number' ?
+                        i : 0;
+            };
+               for (let i = 2; i < 20; i++) {
+               let total = api
+                .column(i, { page: 'current' })
+                .data()
+                .reduce(function (a, b) {
+                    return intVal(a) + intVal(b);
+                }, 0);
+               //console.log(api.column(i).footer());
+               //console.log(api.column(i));
+               $(api.column(i).footer()).html(total );
+              }
+         } 
+});
+
+// thank's chatGPT
+function removeCommasInsideQuotes(str) {
+  let insideQuotes = false;
+  let result = '';
+
+  for (let i = 0; i < str.length; i++) {
+    const char = str[i];
+
+    if (char === '"') {
+      insideQuotes = !insideQuotes;
+    }
+
+    if (insideQuotes && char === ',') {
+      console.log("FOUND ");
+      result += '';
+    } else {
+      result += char;
+    }
+  }
+
+  return result;
+}
+
+ function csvToArray(str, delimiter = ",") {
+
+      // slice from start of text to the first \n index
+      // use split to create an array from string by delimiter
+      const headers = str.slice(0, str.indexOf("\n")).split(delimiter);
+
+      // slice from \n index + 1 to the end of the text
+      // use split to create an array of each csv value row
+      const rows = str.slice(str.indexOf("\n") + 1).split("\n");
+
+      // Map the rows
+      // split values from each row into an array
+      // use headers.reduce to create an object
+      // object properties derived from headers:values
+      // the object passed as an element of the array
+      const arr = rows.map(function (row) {
+        row = removeCommasInsideQuotes(row);
+        console.log(row);
+        const values = row.split(delimiter);
+        const el = headers.reduce(function (object, header, index) {
+          if (values[index] == undefined) {
+              object[header] = "";
+          } else {
+          object[header] = values[index];
+          }
+          return object;
+        }, {});
+        return el;
+      });
+
+      // return the array
+      console.log(arr);
+      return arr;
+    }
+
+
+  $(document).ready(function() {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+
+    $.ajax({
+      type: "GET",
+      url: "tc2.csv",
+      dataType: "text",
+      success: function(data) {
+        //console.log(csvToArray(data));
+        dataTable.rows.add(csvToArray(data)).draw();
+        //dataTable.rows.add($.csv.toObjects(data)).draw();
+      }
+    });
+  });
+})();
+</script>
+
+</body>
+</html>
