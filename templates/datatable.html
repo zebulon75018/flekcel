@@ -267,7 +267,7 @@ function removeCommasInsideQuotes(str) {
 
     $.ajax({
       type: "GET",
-      url: "tc2.csv",
+      url: "{{filecsv}}",
       dataType: "text",
       success: function(data) {
         //console.log(csvToArray(data));
